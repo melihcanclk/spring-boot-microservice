@@ -20,7 +20,7 @@ public class InventoryServiceApplication {
 			Inventory inventory1 = Inventory.builder()
 					.skuCode("123").quantity(10).build();
 			Inventory inventory2 = Inventory.builder()
-					.skuCode("456").quantity(10).build();
+					.skuCode("456").quantity(0).build();
 
 			inventoryRepository.save(inventory1);
 			inventoryRepository.save(inventory2);
