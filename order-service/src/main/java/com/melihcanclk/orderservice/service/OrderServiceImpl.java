@@ -5,17 +5,18 @@ import com.melihcanclk.orderservice.dto.OrderRequest;
 import com.melihcanclk.orderservice.model.Order;
 import com.melihcanclk.orderservice.model.OrderLineItem;
 import com.melihcanclk.orderservice.repository.OrderRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class OrderServiceImpl implements OrderService{
 
     private final OrderRepository orderRepository;
