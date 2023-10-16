@@ -30,6 +30,14 @@
         <testcontainers.version>1.17.6</testcontainers.version>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>me.paulschwarz</groupId>
+            <artifactId>spring-dotenv</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+    </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
