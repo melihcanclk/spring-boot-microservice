@@ -12,9 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InventoryResponse {
 
-    @Column(name = "sku_code")
     private String skuCode;
-
-    @Column(name = "is_in_stock")
     private Boolean isInStock;
 }

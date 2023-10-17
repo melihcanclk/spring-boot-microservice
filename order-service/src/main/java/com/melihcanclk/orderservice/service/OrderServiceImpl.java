@@ -20,7 +20,7 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
-public class OrderServiceImpl implements OrderService{
+public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
 
@@ -37,33 +37,33 @@ public class OrderServiceImpl implements OrderService{
 
         List<String> listOfSkuCodes = order.getOrderLineItems().stream().map(OrderLineItem::getSkuCode).toList();
 
-
         // call inventory service to check if inventory is in stock
         InventoryResponse[] inventoryResponseArray = webClientBuilder.build().get()
-                .uri("http://inventory-service/api/v1/inventory", uriBuilder -> uriBuilder.queryParam("skuCode", listOfSkuCodes).build())
+                .uri("http://inventory-service/api/v1/inventory",
+                        uriBuilder -> uriBuilder.queryParam("skuCode", listOfSkuCodes).build())
                 .retrieve()
                 .bodyToMono(InventoryResponse[].class)
                 .block();
 
+        boolean allProductsInStock = false;
         if (inventoryResponseArray != null) {
-            boolean isAllProductsInStock = Arrays.stream(inventoryResponseArray).allMatch(InventoryResponse::getIsInStock);
-            if(isAllProductsInStock){
+            allProductsInStock = Arrays.stream(inventoryResponseArray)
+                    .allMatch(InventoryResponse::getIsInStock);
+
+            if (allProductsInStock) {
                 orderRepository.save(order);
-                log.info("Order service: Order is placed successfully");
-                return order.getOrderNumber();
+                // publish Order Placed Event
+                return "Order Placed";
             } else {
-                log.error("Order service: Product is not in stock");
-                throw new IllegalArgumentException("Order service: Product is not in stock, please try again later");
+                throw new IllegalArgumentException("Product is not in stock, please try again later");
             }
-        } else {
-            log.error("Order service: Inventory response is null");
-            throw new IllegalArgumentException("Order service: Inventory response is null");
+        }  else {
+            throw new IllegalArgumentException("Product is not in stock, please try again later");
         }
     }
 
     private OrderLineItem mapToDTO(OrderLineItemDTO orderLineItemDTO) {
         return OrderLineItem.builder()
-                .price(orderLineItemDTO.getPrice())
                 .skuCode(orderLineItemDTO.getSkuCode())
                 .quantity(orderLineItemDTO.getQuantity())
                 .build();
