@@ -35,3 +35,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Files that are created when building the project with Docker ###
+grafana_data
+postgres-data
+postgres-inventory
+postgres-order
+realms
+mysql_keycloak_data/
